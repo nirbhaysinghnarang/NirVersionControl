@@ -45,20 +45,27 @@ class Repo(object):
             (6): creating .git/description file
         """
         # Check if path is valid
+
         if(os.path.exists(self.workingTree)):
             if not os.path.isdir(self.workingTree):
                 raise Exception("%s is not a directory!" % self.workingTree)
-        if os.listdir(self.workingTree):
-            print(os.listdir(self.workingTree))
-            raise Exception("%s is not empty!" % self.workingTree)
-        else:
-            os.makedirs(self.directory)
+        try:
+            if os.listdir(self.workingTree):
+                raise Exception("%s is not empty!" % self.workingTree)
+            else:
+                os.makedirs(self.directory)
+        except:
+            try:
+                os.makedirs(self.directory)
+            except:
+                print(f"{self.workingTree} is already a repository.")
         # create sub dirs
         assert(repo_dir(self, "branches", mkDir=True))
         assert(repo_dir(self, "objects", mkDir=True))
         assert(repo_dir(self, "refs", "tags", mkDir=True))
         assert(repo_dir(self, "refs", "heads", mkDir=True))
         # create file
+
         with open(repo_file(self, "description"), "w") as f:
             f.write(
                 "Unnamed repository; edit this file 'description' to name the repository.\n")
